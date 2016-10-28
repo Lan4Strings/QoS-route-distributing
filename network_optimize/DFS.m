@@ -1,5 +1,5 @@
-%Éî¶ÈÓÅÏÈËÑË÷¶ÔÊı¾İÁ÷½øĞĞ·ÅÖÃ
-
+%æ·±åº¦ä¼˜å…ˆæœç´¢å¯¹æ•°æ®æµè¿›è¡Œæ”¾ç½®
+%distribute the data flows by DFS
 
 clear all
 load aaa.mat
@@ -9,15 +9,15 @@ for i=1:flownum
     pre=zeros(1,linknum);
     fn=flow{i}.fromnode;
     tn=flow{i}.tonode;
-    topP=0; %Õ»¶¥PÖ¸Õë
-    lastlink=0; %Ç°ÏÎ½Úµã
+    topP=0; %æ ˆé¡¶PæŒ‡é’ˆ top of the stack pointer P
+    lastlink=0; %å‰è¡”èŠ‚ç‚¹ pre pointer
     pre=zeros(1,linknum);
     jishuqi=0;
     while(1==1)
         jishuqi=jishuqi+1;
         for j=1:nodenum
-            nocircle=0; %ÅĞ¶ÏÊÇ·ñËÀÑ­»·
-            if (linjie(fn,j)~=0 && tf(fn,j)==0) %¼ìÑéÊÇ·ñÔÚ¶ÓÁĞÖĞ£¬ÊÇ·ñÁ¬Í¨                
+            nocircle=0; %åˆ¤æ–­æ˜¯å¦æ­»å¾ªç¯ infinate loop check flag
+            if (linjie(fn,j)~=0 && tf(fn,j)==0) %æ£€éªŒæ˜¯å¦åœ¨é˜Ÿåˆ—ä¸­ï¼Œæ˜¯å¦è¿é€š  in queue check, connection check               
                 if (lastlink==0)
                     check=0;
                 else
@@ -33,9 +33,9 @@ for i=1:flownum
                 end
                 if (nocircle==0)
                     topP=topP+1;
-                    P(topP)=linjieLINK(fn,j); %½øÕ»P
+                    P(topP)=linjieLINK(fn,j); %è¿›æ ˆP push into the stack
                     tf(fn,j)=1;
-                    pre(P(topP))=lastlink; %±ê¼Ç¸¸Ç×
+                    pre(P(topP))=lastlink; %æ ‡è®°çˆ¶äº² mark the parent node
                 end
               
             end
@@ -44,16 +44,16 @@ for i=1:flownum
             break;
         end
         fn=link{P(topP)}.tonode;
-        lastlink=P(topP); %¸ü¸ÄÇ°ÏÎ½Úµã
-        tf(link{P(topP)}.fromnode,link{P(topP)}.tonode)=0; %±ê¼Ç»¹Ô­
-        topP=topP-1; %³öÕ»
+        lastlink=P(topP); %æ›´æ”¹å‰è¡”èŠ‚ç‚¹ update pre pointer
+        tf(link{P(topP)}.fromnode,link{P(topP)}.tonode)=0; %æ ‡è®°è¿˜åŸ recover the mark
+        topP=topP-1; %å‡ºæ ˆ pop from the stack
         if (topP==0 && link{lastlink}.fromnode~=flow{i}.fromnode)
             break;
         end
-        if (fn==tn) %¿ªÊ¼¼ì²âÔ¼ÊøÌõ¼ş
-            sumdelay=0;% ×ÜÑÓ³Ù³õÊ¼»¯
-            sumpassratio=1; %×Ü´«°üÂÊ³õÊ¼»¯
-            cost=0;%³õÊ¼½ğÇ®
+        if (fn==tn) %å¼€å§‹æ£€æµ‹çº¦æŸæ¡ä»¶ check the constraints
+            sumdelay=0;% æ€»å»¶è¿Ÿåˆå§‹åŒ– delay init
+            sumpassratio=1; %æ€»ä¼ åŒ…ç‡åˆå§‹åŒ– passratio init
+            cost=0;%åˆå§‹é‡‘é’± cost init
             check=P(topP+1);
             checkright=0;
             while(link{check}.unbandwidth>=flow{i}.bandwidth && sumdelay<=flow{i}.maxdelay && sumpassratio>1-flow{i}.maxlossratio)
@@ -72,14 +72,14 @@ for i=1:flownum
             if (checkright==1)
                 break;
             else
-                %²»Âú×ã
+                %ä¸æ»¡è¶³ dissatisfaction with constraints
                 if (topP==0)
                     break
                 end;
                 fn=link{P(topP)}.tonode;
-                lastlink=P(topP); %¸ü¸ÄÇ°ÏÎ½Úµã
-                tf(link{P(topP)}.fromnode,link{P(topP)}.tonode)=0; %±ê¼Ç»¹Ô­
-                topP=topP-1; %³öÕ» 
+                lastlink=P(topP); %æ›´æ”¹å‰è¡”èŠ‚ç‚¹ change pre pointer
+                tf(link{P(topP)}.fromnode,link{P(topP)}.tonode)=0; %æ ‡è®°è¿˜åŸ recover the mark
+                topP=topP-1; %å‡ºæ ˆ  pop from the stack
             end
         end
     end
