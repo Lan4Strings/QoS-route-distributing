@@ -1,0 +1,54 @@
+a1=0;a2=0;a3=0;
+a1max=1;a2max=1;a3max=1;
+a1min=0;a2min=0;a3min=0;
+youjie=0;
+[ba0 ba1 ba2 ba3]=daoshu(a1,a2,a3);
+Na1=0;Na2=0;Na3=0;Ma=5;
+N=1;
+wujie=0;
+manzu2=0;
+weightdij;
+while(N<M)
+    N=N+1;
+    %disp(['N:',num2str(N),'   a1:a2:a3  ',num2str(a1),':',num2str(a2),':',num2str(a3),'     ba0:ba1:ba2:ba3  ',num2str(ba0),':',num2str(ba1),':',num2str(ba2),':',num2str(ba3)]);
+    aa1=a1;aa2=a2;aa3=a3;bb0=ba0;bb1=ba1;bb2=ba2;bb3=ba3;
+    weightdij;
+    diedaia1;
+    if(wujie==1)
+        etime=toc;
+        disp(['无解,耗时：',num2str(etime),'s'])
+        flow_q(1)=[];disp(['迭代次数：',num2str(N)])
+        return;
+    end
+    diedaia2;
+    if(wujie==1)
+        etime=toc;
+        disp(['无解,耗时：',num2str(etime),'s'])
+        flow_q(1)=[];disp(['迭代次数：',num2str(N)])
+        return;
+    end
+    diedaia3;
+    if(wujie==1)
+        etime=toc;
+        disp(['无解,耗时：',num2str(etime),'s'])
+        flow_q(1)=[];disp(['迭代次数：',num2str(N)])
+        return;
+    end
+    etime=toc;
+    disp(['有解,求解耗时：',num2str(etime),'s'])
+    disp(['迭代次数：',num2str(N)])
+    flo=fflo;
+    %flo%输出解
+    youjie=1;
+    fflow=flo;flin=lin;
+    min=flo.sumcost;%最优解
+    flow_q(1)=[];
+    break;
+end
+if(N>M)
+    etime=toc;
+    disp(['无解,耗时：',num2str(etime),'s'])
+    flow_q(1)=[];
+    return;
+end
+    
